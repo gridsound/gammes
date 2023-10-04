@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, user-scalable=no"/>
+<title>Gammes (musical scales)</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap"/>
+<style>
+	html,
+	body {
+		height: 100%;
+	}
+	body {
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		color: #fff;
+		font-family: "Montserrat", sans-serif;
+		background-color: #333;
+		user-select: none;
+	}
+
+	#title {
+		font-size: 72px;
+		font-family: "Parisienne", sans-serif;
+		margin: 32px 0;
+	}
+	#form {
+		margin-top: 32px;
+	}
+	#form div + div {
+		margin-top: 16px;
+	}
+	#form label {
+		display: flex;
+		align-items: center;
+		height: 2em;
+	}
+	#form label span {
+		margin-left: 8px;
+	}
+	#notation {
+		font-size: .7em;
+	}
+
+	#scalesGraph {
+		--gamme: 0;
+		--size: 440px;
+		--color: #000;
+		--rotate-dur: .4s;
+		--key-scale: 1;
+		position: relative;
+		overflow: hidden;
+		width: var( --size );
+		height: var( --size );
+		min-height: var( --size );
+		-webkit-tap-highlight-color: transparent;
+	}
+	#scalesGraphInn {
+		position: absolute;
+		inset: 20px;
+	}
+	#circle-ext {
+		position: absolute;
+		inset: 0;
+		border-radius: 50%;
+		opacity: .07;
+		background-color: var( --color );
+	}
+	#svg-wrap {
+		position: absolute;
+		inset: 15%;
+	}
+	#svg {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		fill: var( --color );
+		stroke: var( --color );
+		stroke-width: 1px;
+		fill-opacity: .15;
+		pointer-events: none;
+		transform: rotate( calc( var( --gamme ) * 30deg ) );
+	}
+	#polyMinor,
+	#polyMajor {
+		transition: opacity .2s;
+	}
+	#scalesGraph[ data-scale-m="major" ] #polyMinor,
+	#scalesGraph[ data-scale-m="minor" ] #polyMajor {
+		opacity: 0;
+	}
+	#keys {
+		position: absolute;
+		inset: 0;
+	}
+	.key {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		font-size: 25px;
+		cursor: pointer;
+		transform: rotate( calc( 360deg / 12 * var( --keyInd ) ) ) translateY( -42% );
+		pointer-events: none;
+	}
+	.key::before {
+		content: "";
+		position: absolute;
+		top: 56%;
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		background-color: var( --color );
+	}
+	.key:not( .key-active )::before {
+		opacity: 0;
+	}
+	.key span {
+		padding: .1em .5ch;
+		border-radius: .2em;
+		transform: scale( var( --key-scale ) ) rotate( calc( 360deg / -12 * var( --keyInd ) ) );
+		transition: background-color, opacity, transform;
+		transition-duration: var( --rotate-dur );
+		pointer-events: auto;
+	}
+	.key-selected span {
+		font-weight: bold;
+		background-color: #0005;
+		--key-scale: 1.25;
+	}
+	.key:not( .key-active ) span {
+		opacity: .2;
+	}
+
+	@media ( max-width: 440px ) {
+		#scalesGraph { --size: 320px; }
+	}
+</style>
+</head>
+<body>
+
+<div id="title">Gammes</div>
+
+<div id="scalesGraph" data-scale-m="major">
+	<div id="scalesGraphInn">
+		<div id="circle-ext"></div>
+		<div id="svg-wrap">
+			<svg id="svg" viewBox="0 0 100 100">
+				<polyline id="polyMajor" points="50,0 93,25 93,75 75,93 25,93 0,50 25,7"/>
+				<polyline id="polyMinor" points="50,0 93,25 100,50 75,93 25,93 7,75 7,25"/>
+			</svg>
+		</div>
+		<div id="keys">
+			<div class="key" style="--keyInd:  0" data-key="0"><span></span></div>
+			<div class="key" style="--keyInd:  1" data-key="1"><span></span></div>
+			<div class="key" style="--keyInd:  2" data-key="2"><span></span></div>
+			<div class="key" style="--keyInd:  3" data-key="3"><span></span></div>
+			<div class="key" style="--keyInd:  4" data-key="4"><span></span></div>
+			<div class="key" style="--keyInd:  5" data-key="5"><span></span></div>
+			<div class="key" style="--keyInd:  6" data-key="6"><span></span></div>
+			<div class="key" style="--keyInd:  7" data-key="7"><span></span></div>
+			<div class="key" style="--keyInd:  8" data-key="8"><span></span></div>
+			<div class="key" style="--keyInd:  9" data-key="9"><span></span></div>
+			<div class="key" style="--keyInd: 10" data-key="10"><span></span></div>
+			<div class="key" style="--keyInd: 11" data-key="11"><span></span></div>
+		</div>
+	</div>
+</div>
+
+<div id="form">
+	<div>
+		<label><input name="majorMinor" type="radio" value="major" checked/><span>Major</span></label>
+		<label><input name="majorMinor" type="radio" value="minor"/><span>Minor</span></label>
+	</div>
+	<div id="notation">
+		<label><input name="notation" type="radio" value="doremi" checked/><span>Do, Re, Mi, ...</span></label>
+		<label><input name="notation" type="radio" value="CDE"/><span>C, D, E, ...</span></label>
+	</div>
+</div>
+
+<script>
+	const form = document.querySelector( "#form" );
+	const scalesGraph = document.querySelector( "#scalesGraph" );
+	const keys = document.querySelectorAll( ".key" );
+	const scales = {
+		major: [ 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1 ],
+		minor: [ 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0 ],
+	};
+	const notation = {
+		CDE:    [ "C",  "C#",  "D",  "D#",  "E",  "F",  "F#",  "G",   "G#",   "A",  "A#",  "B" ],
+		doremi: [ "Do", "Do#", "Re", "Re#", "Mi", "Fa", "Fa#", "Sol", "Sol#", "La", "La#", "Si" ],
+	};
+	let gamme = 0;
+
+	scalesGraph.onclick = e => {
+		const k = e.target.parentNode.dataset.key;
+
+		if ( k ) {
+			gamme = +k;
+			scalesGraph.style.setProperty( "--gamme", gamme );
+			activeKeys();
+		}
+	};
+	form.onchange = e => {
+		if ( e.target.name === "majorMinor" ) {
+			scalesGraph.dataset.scaleM = e.target.value;
+			activeKeys();
+		}
+		if ( e.target.name === "notation" ) {
+			setNotation( notation[ e.target.value ] );
+		}
+	}
+
+	function activeKeys() {
+		const arr = scales[ scalesGraph.dataset.scaleM ];
+
+		keys.forEach( ( el, i ) => {
+			el.classList.toggle( "key-selected", i === gamme );
+			el.classList.toggle( "key-active", !!arr[ ( 12 + i - gamme ) % 12 ] );
+		} );
+	}
+	function setNotation( notation ) {
+		keys.forEach( ( el, i ) => {
+			el.firstChild.textContent = notation[ i ];
+		} );
+	}
+
+	activeKeys();
+	setNotation( notation.doremi );
+</script>
+</body>
+</html>
