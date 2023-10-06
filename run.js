@@ -14,6 +14,10 @@ document.body.prepend(
 			GSUcreateLabel( null, GSUcreateInput( { name: "notation", type: "radio", value: "doremi", checked: true } ), GSUcreateSpan( null, "Do, Ré, Mi, ..." ) ),
 			GSUcreateLabel( null, GSUcreateInput( { name: "notation", type: "radio", value: "CDE" } ), GSUcreateSpan( null, "C, D, E, ..." ) ),
 		),
+		GSUcreateDiv( null,
+			GSUcreateLabel( null, GSUcreateInput( { name: "diezeBemol", type: "radio", value: "♯", checked: true } ), GSUcreateSpan( null, "♯" ) ),
+			GSUcreateLabel( null, GSUcreateInput( { name: "diezeBemol", type: "radio", value: "♭" } ), GSUcreateSpan( null, "♭" ) ),
+		),
 	),
 	GSUcreateDiv( { id: "scalesGraph", "data-scale-m": "major" },
 		GSUcreateDiv( { id: "scalesGraphInn" },
@@ -56,11 +60,17 @@ const scales = {
 	major: [ 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1 ],
 	minor: [ 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0 ],
 };
-const notation = {
-	CDE:    [ "C",  "C♯",  "D",  "D♯",  "E",  "F",  "F♯",  "G",   "G♯",   "A",  "A♯",  "B" ],
-	doremi: [ "Do", "Do♯", "Re", "Re♯", "Mi", "Fa", "Fa♯", "Sol", "Sol♯", "La", "La♯", "Si" ],
+const notationDieze = {
+	CDE:    [ "C",  "C♯",  "D",  "D♯",  "E",  "F",  "F♯",   "G",   "G♯",   "A",  "A♯",  "B" ],
+	doremi: [ "Do", "Do♯", "Ré", "Ré♯", "Mi", "Fa", "Fa♯",  "Sol", "Sol♯", "La", "La♯", "Si" ],
+};
+const notationBemol = {
+	CDE:    [ "C",  "D♭",  "D",  "E♭",  "E",  "F",  "G♭",   "G",   "A♭",   "A",  "B♭",  "B" ],
+	doremi: [ "Do", "Ré♭", "Ré", "Mi♭", "Mi", "Fa", "Sol♭", "Sol", "La♭",  "La", "Si♭", "Si" ],
 };
 let gamme = 0;
+let notation = "doremi";
+let useDieze = true;
 
 scalesGraph.onclick = e => {
 	const k = e.target.parentNode.dataset.key;
@@ -72,12 +82,19 @@ scalesGraph.onclick = e => {
 	}
 };
 form.onchange = e => {
-	if ( e.target.name === "majorMinor" ) {
-		scalesGraph.dataset.scaleM = e.target.value;
-		activeKeys();
-	}
-	if ( e.target.name === "notation" ) {
-		setNotation( notation[ e.target.value ] );
+	switch ( e.target.name ) {
+		case "majorMinor":
+			scalesGraph.dataset.scaleM = e.target.value;
+			activeKeys();
+			break;
+		case "notation":
+			notation = e.target.value;
+			updateKeysName();
+			break;
+		case "diezeBemol":
+			useDieze = e.target.value === "♯";
+			updateKeysName();
+			break;
 	}
 };
 
@@ -89,11 +106,14 @@ function activeKeys() {
 		el.classList.toggle( "key-active", !!arr[ ( 12 + i - gamme ) % 12 ] );
 	} );
 }
-function setNotation( notation ) {
+function updateKeysName() {
+	const arr = useDieze ? notationDieze : notationBemol;
+	const arr2 = arr[ notation ];
+
 	keys.forEach( ( el, i ) => {
-		el.firstChild.textContent = notation[ i ];
+		el.firstChild.textContent = arr2[ i ];
 	} );
 }
 
 activeKeys();
-setNotation( notation.doremi );
+updateKeysName();
