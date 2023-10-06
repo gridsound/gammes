@@ -1,0 +1,160 @@
+html,
+body {
+	height: 100%;
+}
+body {
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	color: #fff;
+	font-family: "Montserrat", sans-serif;
+	user-select: none;
+	background-color: #22222a;
+	background-image: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cg fill='%23000' fill-opacity='0.1'%3E%3Cpolygon fill-rule='evenodd' points='8 4 12 6 8 8 6 12 4 8 0 6 4 4 6 0 8 4'/%3E%3C/g%3E%3C/svg%3E" );
+}
+
+#title {
+	font-size: 72px;
+	margin: 32px 0;
+}
+#title span:first-child {
+/*	font-family: "Parisienne", sans-serif;*/
+	font-family: "Parisienne";
+	text-shadow: 0 0 20px #fff4;
+}
+#title span:last-child {
+	margin-left: 1ch;
+	font-size: 10px;
+	font-weight: 700;
+	color: #999;
+}
+
+#form {
+	margin-top: 32px;
+}
+#form div + div {
+	margin-top: 16px;
+}
+#form label {
+	display: flex;
+	align-items: center;
+	height: 2em;
+}
+#form label span {
+	margin-left: 8px;
+}
+#notation {
+	font-size: .7em;
+}
+
+#scalesGraph {
+	--gamme: 0;
+	--size: 440px;
+	--key-scale: 1;
+	position: relative;
+	overflow: hidden;
+	width: var( --size );
+	height: var( --size );
+	min-height: var( --size );
+	-webkit-tap-highlight-color: transparent;
+}
+#scalesGraphInn {
+	position: absolute;
+	inset: 20px;
+}
+#circle-ext {
+	position: absolute;
+	inset: 0;
+	border-radius: 50%;
+	opacity: .07;
+	background-color: #000;
+}
+#svg-wrap {
+	position: absolute;
+	inset: 17%;
+}
+#svg {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	fill: #fff;
+	stroke: #fff;
+	stroke-width: 1px;
+	fill-opacity: .03;
+	pointer-events: none;
+	transform: rotate( calc( var( --gamme ) * 30deg ) );
+}
+#polyMinor,
+#polyMajor {
+	transition: opacity .2s;
+}
+#scalesGraph[ data-scale-m="major" ] #polyMinor,
+#scalesGraph[ data-scale-m="minor" ] #polyMajor {
+	opacity: 0;
+}
+#keys {
+	position: absolute;
+	inset: 0;
+}
+.key {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	font-size: 25px;
+	cursor: pointer;
+	transform: rotate( calc( 360deg / 12 * var( --keyInd ) ) ) translateY( -42% );
+	pointer-events: none;
+}
+.key::before {
+	content: "";
+	position: absolute;
+	top: 58%;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background-color: #fff;
+}
+.key:not( .key-active )::before {
+	opacity: 0;
+}
+.key span {
+	padding: .1em .5ch;
+	border-radius: .2em;
+	transform: scale( var( --key-scale ) ) rotate( calc( 360deg / -12 * var( --keyInd ) ) );
+	transition: background-color, opacity, transform;
+	transition-duration: .2s;
+	pointer-events: auto;
+}
+.key-selected span {
+	font-weight: bold;
+	background-color: #0005;
+	--key-scale: 1.25;
+}
+.key:not( .key-active ) span {
+	opacity: .2;
+}
+
+#foot {
+	display: flex;
+	align-items: center;
+	margin-top: auto;
+	height: 48px;
+	min-height: 48px;
+}
+#copyright,
+#copyright a {
+	color: inherit;
+}
+#copyright {
+	font-size: 11px;
+	font-weight: 700;
+	opacity: .5;
+}
+
+@media ( max-width: 440px ) {
+	#scalesGraph { --size: 320px; }
+}
