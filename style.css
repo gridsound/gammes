@@ -16,10 +16,9 @@ body {
 
 #title {
 	font-size: 72px;
-	margin: 32px 0;
+	margin: 32px 0 16px;
 }
 #title span:first-child {
-/*	font-family: "Parisienne", sans-serif;*/
 	font-family: "Parisienne";
 	text-shadow: 0 0 20px #fff4;
 }
@@ -31,21 +30,17 @@ body {
 }
 
 #form {
-	margin-top: 32px;
-}
-#form div + div {
-	margin-top: 16px;
+	display: flex;
+	gap: 16px;
 }
 #form label {
 	display: flex;
 	align-items: center;
-	height: 2em;
+	font-size: 14px;
+	cursor: pointer;
 }
 #form label span {
 	margin-left: 8px;
-}
-#notation {
-	font-size: .7em;
 }
 
 #scalesGraph {
