@@ -5,18 +5,20 @@ body {
 body {
 	margin: 0;
 	display: flex;
+	overflow-x: hidden;
 	flex-direction: column;
 	align-items: center;
 	color: #fff;
 	font-family: "Montserrat", sans-serif;
-	user-select: none;
 	background-color: #22222a;
 	background-image: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cg fill='%23000' fill-opacity='0.1'%3E%3Cpolygon fill-rule='evenodd' points='8 4 12 6 8 8 6 12 4 8 0 6 4 4 6 0 8 4'/%3E%3C/g%3E%3C/svg%3E" );
+	user-select: none;
 }
 
 #title {
 	font-size: 72px;
 	margin: 32px 0 16px;
+	white-space: nowrap;
 }
 #title span:first-child {
 	font-family: "Parisienne";
@@ -32,6 +34,7 @@ body {
 #form {
 	display: flex;
 	gap: 16px;
+	white-space: nowrap;
 }
 #form label {
 	display: flex;
@@ -45,14 +48,15 @@ body {
 
 #scalesGraph {
 	--gamme: 0;
-	--size: 440px;
 	--key-scale: 1;
-	position: relative;
-	overflow: hidden;
-	width: var( --size );
-	height: var( --size );
-	min-height: var( --size );
+	width: 440px;
+	margin-top: 32px;
 	-webkit-tap-highlight-color: transparent;
+}
+#scalesGraphPadding {
+	position: relative;
+	padding-top: 100%;
+	overflow: hidden;
 }
 #scalesGraphInn {
 	position: absolute;
@@ -99,7 +103,7 @@ body {
 	align-items: center;
 	justify-content: center;
 	text-align: center;
-	font-size: 25px;
+	font-size: 24px;
 	cursor: pointer;
 	transform: rotate( calc( 360deg / 12 * var( --keyInd ) ) ) translateY( -42% );
 	pointer-events: none;
@@ -107,7 +111,7 @@ body {
 .key::before {
 	content: "";
 	position: absolute;
-	top: 58%;
+	top: 57.7%;
 	width: 10px;
 	height: 10px;
 	border-radius: 50%;
@@ -151,5 +155,12 @@ body {
 }
 
 @media ( max-width: 440px ) {
-	#scalesGraph { --size: 320px; }
+	#scalesGraph {
+		width: 100%;
+		height: 360px;
+		min-height: 360px;
+	}
+	.key {
+		font-size: 18px;
+	}
 }
