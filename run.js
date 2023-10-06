@@ -1,5 +1,9 @@
 "use strict";
 
+let notation = localStorage.getItem( "gammes-notation" ) || "doremi";
+let majorMinor = localStorage.getItem( "gammes-majorMinor" ) || "major";
+let diezeBemol = localStorage.getItem( "gammes-diezeBemol" ) || "♯";
+
 document.body.prepend(
 	GSUcreateDiv( { id: "title" },
 		GSUcreateSpan( null, "Gammes" ),
@@ -7,19 +11,19 @@ document.body.prepend(
 	),
 	GSUcreateDiv( { id: "form" },
 		GSUcreateDiv( null,
-			GSUcreateLabel( null, GSUcreateInput( { name: "majorMinor", type: "radio", value: "major", checked: true } ), GSUcreateSpan( null, "Major" ) ),
-			GSUcreateLabel( null, GSUcreateInput( { name: "majorMinor", type: "radio", value: "minor" } ), GSUcreateSpan( null, "Minor" ) ),
+			GSUcreateLabel( null, GSUcreateInput( { name: "majorMinor", type: "radio", value: "major", checked: majorMinor === "major" } ), GSUcreateSpan( null, "Major" ) ),
+			GSUcreateLabel( null, GSUcreateInput( { name: "majorMinor", type: "radio", value: "minor", checked: majorMinor === "minor" } ), GSUcreateSpan( null, "Minor" ) ),
 		),
 		GSUcreateDiv( null,
-			GSUcreateLabel( null, GSUcreateInput( { name: "notation", type: "radio", value: "doremi", checked: true } ), GSUcreateSpan( null, "Do, Ré, Mi, ..." ) ),
-			GSUcreateLabel( null, GSUcreateInput( { name: "notation", type: "radio", value: "CDE" } ), GSUcreateSpan( null, "C, D, E, ..." ) ),
+			GSUcreateLabel( null, GSUcreateInput( { name: "notation", type: "radio", value: "doremi", checked: notation === "doremi" } ), GSUcreateSpan( null, "Do, Ré, Mi, ..." ) ),
+			GSUcreateLabel( null, GSUcreateInput( { name: "notation", type: "radio", value: "CDE", checked: notation === "CDE" } ), GSUcreateSpan( null, "C, D, E, ..." ) ),
 		),
 		GSUcreateDiv( null,
-			GSUcreateLabel( null, GSUcreateInput( { name: "diezeBemol", type: "radio", value: "♯", checked: true } ), GSUcreateSpan( null, "♯" ) ),
-			GSUcreateLabel( null, GSUcreateInput( { name: "diezeBemol", type: "radio", value: "♭" } ), GSUcreateSpan( null, "♭" ) ),
+			GSUcreateLabel( null, GSUcreateInput( { name: "diezeBemol", type: "radio", value: "♯", checked: diezeBemol === "♯" } ), GSUcreateSpan( null, "♯" ) ),
+			GSUcreateLabel( null, GSUcreateInput( { name: "diezeBemol", type: "radio", value: "♭", checked: diezeBemol === "♭" } ), GSUcreateSpan( null, "♭" ) ),
 		),
 	),
-	GSUcreateDiv( { id: "scalesGraph", "data-scale-m": "major" },
+	GSUcreateDiv( { id: "scalesGraph", "data-scale-m": majorMinor },
 		GSUcreateDiv( { id: "scalesGraphInn" },
 			GSUcreateDiv( { id: "circle-ext" } ),
 			GSUcreateDiv( { id: "svg-wrap" },
@@ -60,17 +64,17 @@ const scales = {
 	major: [ 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1 ],
 	minor: [ 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0 ],
 };
-const notationDieze = {
-	CDE:    [ "C",  "C♯",  "D",  "D♯",  "E",  "F",  "F♯",   "G",   "G♯",   "A",  "A♯",  "B" ],
-	doremi: [ "Do", "Do♯", "Ré", "Ré♯", "Mi", "Fa", "Fa♯",  "Sol", "Sol♯", "La", "La♯", "Si" ],
-};
-const notationBemol = {
-	CDE:    [ "C",  "D♭",  "D",  "E♭",  "E",  "F",  "G♭",   "G",   "A♭",   "A",  "B♭",  "B" ],
-	doremi: [ "Do", "Ré♭", "Ré", "Mi♭", "Mi", "Fa", "Sol♭", "Sol", "La♭",  "La", "Si♭", "Si" ],
+const notations = {
+	"♯": {
+		CDE:    [ "C",  "C♯",  "D",  "D♯",  "E",  "F",  "F♯",   "G",   "G♯",   "A",  "A♯",  "B" ],
+		doremi: [ "Do", "Do♯", "Ré", "Ré♯", "Mi", "Fa", "Fa♯",  "Sol", "Sol♯", "La", "La♯", "Si" ],
+	},
+	"♭": {
+		CDE:    [ "C",  "D♭",  "D",  "E♭",  "E",  "F",  "G♭",   "G",   "A♭",   "A",  "B♭",  "B" ],
+		doremi: [ "Do", "Ré♭", "Ré", "Mi♭", "Mi", "Fa", "Sol♭", "Sol", "La♭",  "La", "Si♭", "Si" ],
+	},
 };
 let gamme = 0;
-let notation = "doremi";
-let useDieze = true;
 
 scalesGraph.onclick = e => {
 	const k = e.target.parentNode.dataset.key;
@@ -82,24 +86,30 @@ scalesGraph.onclick = e => {
 	}
 };
 form.onchange = e => {
+	const val = e.target.value;
+
 	switch ( e.target.name ) {
 		case "majorMinor":
-			scalesGraph.dataset.scaleM = e.target.value;
+			localStorage.setItem( "gammes-majorMinor", val );
+			majorMinor = val;
+			scalesGraph.dataset.scaleM = val;
 			activeKeys();
 			break;
 		case "notation":
-			notation = e.target.value;
+			localStorage.setItem( "gammes-notation", val );
+			notation = val;
 			updateKeysName();
 			break;
 		case "diezeBemol":
-			useDieze = e.target.value === "♯";
+			localStorage.setItem( "gammes-diezeBemol", val );
+			diezeBemol = val;
 			updateKeysName();
 			break;
 	}
 };
 
 function activeKeys() {
-	const arr = scales[ scalesGraph.dataset.scaleM ];
+	const arr = scales[ majorMinor ];
 
 	keys.forEach( ( el, i ) => {
 		el.classList.toggle( "key-selected", i === gamme );
@@ -107,11 +117,10 @@ function activeKeys() {
 	} );
 }
 function updateKeysName() {
-	const arr = useDieze ? notationDieze : notationBemol;
-	const arr2 = arr[ notation ];
+	const arr = notations[ diezeBemol ][ notation ];
 
 	keys.forEach( ( el, i ) => {
-		el.firstChild.textContent = arr2[ i ];
+		el.firstChild.textContent = arr[ i ];
 	} );
 }
 
