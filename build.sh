@@ -63,6 +63,7 @@ declare -a JSfilesProd=(
 
 declare -a JSfiles=(
 	"gs-utils/gs-utils-dom.js"
+	"main.html.js"
 	"run.js"
 )
 
