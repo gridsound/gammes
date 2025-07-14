@@ -23,12 +23,6 @@ GSUsetTemplate( "main", o => [
 		GSUcreateDiv( { id: "scalesGraphPadding" },
 			GSUcreateDiv( { id: "scalesGraphInn" },
 				GSUcreateDiv( { id: "circle-ext" } ),
-				GSUcreateDiv( { id: "svg-wrap" },
-					GSUcreateElementSVG( "svg", { id: "svg", viewBox: "0 0 100 100" },
-						GSUcreateElementSVG( "polyline", { id: "polyMajor", points: "50,0 93,25 93,75 75,93 25,93 0,50 25,7" } ),
-						GSUcreateElementSVG( "polyline", { id: "polyMinor", points: "50,0 93,25 100,50 75,93 25,93 7,75 7,25" } ),
-					)
-				),
 				GSUcreateDiv( { id: "keys" },
 					GSUcreateDiv( { class: "key", style: "--keyInd:  0", "data-key": 0 }, GSUcreateSpan()),
 					GSUcreateDiv( { class: "key", style: "--keyInd:  1", "data-key": 1 }, GSUcreateSpan()),
@@ -42,7 +36,14 @@ GSUsetTemplate( "main", o => [
 					GSUcreateDiv( { class: "key", style: "--keyInd:  9", "data-key": 9 }, GSUcreateSpan()),
 					GSUcreateDiv( { class: "key", style: "--keyInd: 10", "data-key": 10 }, GSUcreateSpan()),
 					GSUcreateDiv( { class: "key", style: "--keyInd: 11", "data-key": 11 }, GSUcreateSpan()),
-				)
+				),
+				GSUcreateDiv( { id: "svg-wrap" },
+					GSUcreateElementSVG( "svg", { id: "svg", viewBox: "0 0 100 100" },
+						GSUcreateElementSVG( "polygon", { id: "polyMajor", points: "50,0 93,25 93,75 75,93 25,93 0,50 25,7" } ),
+						GSUcreateElementSVG( "polygon", { id: "polyMinor", points: "50,0 93,25 100,50 75,93 25,93 7,75 7,25" } ),
+					)
+				),
+				GSUcreateButton( { id: "playBtn", icon: "play" } ),
 			),
 		),
 	),
