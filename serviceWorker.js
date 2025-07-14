@@ -11,6 +11,8 @@ self.addEventListener( "install", e => {
 			"/assets/fonts/parisienne-regular.ttf",
 			"/assets/fonts/montserrat-500-latin.woff2",
 			"/assets/fonts/montserrat-700-latin.woff2",
+			"/samples/🎹/60-71.96k.mp3",
+			"/samples/🎹/72-83.96k.mp3",
 		] )
 	) ) );
 } );
