@@ -7,3 +7,6 @@
 [submodule "gs-ui-components"]
 	path = gs-ui-components
 	url = https://github.com/gridsound/gs-ui-components.git
+[submodule "samples"]
+	path = samples
+	url = https://github.com/gridsound/samples.git
