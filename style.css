@@ -41,7 +41,6 @@ body {
 	display: flex;
 	align-items: center;
 	font-size: 14px;
-	cursor: pointer;
 }
 #form label span {
 	margin-left: 8px;
@@ -108,7 +107,7 @@ body {
 	justify-content: center;
 	text-align: center;
 	font-size: 24px;
-	cursor: pointer;
+	cursor: var( --gsuiCursor-pointer );
 	transform: rotate( calc( 360deg / 12 * var( --keyInd ) ) ) translateY( -42% );
 	pointer-events: none;
 	transition: color .25s;
@@ -178,7 +177,6 @@ body {
 	align-items: center;
 	justify-content: center;
 	border-radius: 6px;
-	cursor: pointer;
 	border: 0;
 	color: inherit;
 	font-size: 48px;

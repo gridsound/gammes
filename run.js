@@ -4,12 +4,12 @@ let notation = localStorage.getItem( "gammes-notation" ) || "doremi";
 let majorMinor = localStorage.getItem( "gammes-majorMinor" ) || "major";
 let diezeBemol = localStorage.getItem( "gammes-diezeBemol" ) || "♯";
 
-document.body.prepend( ...GSUgetTemplate( "main", { notation, majorMinor, diezeBemol } ) );
+$body.$prepend( ...GSUgetTemplate( "main", { notation, majorMinor, diezeBemol } ) );
 
-const form = GSUdomQS( "#form" );
-const playBtn = GSUdomQS( "#playBtn" );
-const scalesGraph = GSUdomQS( "#scalesGraph" );
-const keys = GSUdomQSA( ".key" );
+const form = $( "#form" );
+const playBtn = $( "#playBtn" );
+const scalesGraph = $( "#scalesGraph" );
+const keys = $( ".key" );
 const scales = {
 	major: [ 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1 ],
 	minor: [ 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0 ],
@@ -58,17 +58,17 @@ const keysMap = createKeysMap( {
 	83: 5,
 } );
 
-scalesGraph.onclick = e => {
+scalesGraph.$onclick( e => {
 	const k = e.target.parentNode.dataset.key;
 
 	if ( k ) {
 		stop();
 		gamme = +k;
-		GSUsetStyle( scalesGraph, "--gamme", gamme );
+		scalesGraph.$css( "--gamme", gamme );
 		activeKeys();
 	}
-};
-form.onchange = e => {
+} );
+form.$onchange( e => {
 	const val = e.target.value;
 
 	switch ( e.target.name ) {
@@ -76,7 +76,7 @@ form.onchange = e => {
 			stop();
 			localStorage.setItem( "gammes-majorMinor", val );
 			majorMinor = val;
-			scalesGraph.dataset.scaleM = val;
+			scalesGraph.$setAttr( "data-scale-m", val );
 			activeKeys();
 			break;
 		case "notation":
@@ -90,7 +90,7 @@ form.onchange = e => {
 			updateKeysName();
 			break;
 	}
-};
+} );
 
 function loadSample( url ) {
 	return fetch( url )
@@ -98,18 +98,18 @@ function loadSample( url ) {
 		.then( arr => ctx.decodeAudioData( arr ) );
 }
 
-playBtn.onclick = () => {
+playBtn.$onclick( () => {
 	if ( !ctx ) {
 		ctx = GSUaudioContext();
-		GSUdomAddClass( document.body, "loading" );
-		GSUdomSetAttr( playBtn, "data-spin", "on" );
+		$body.$addClass( "loading" );
+		playBtn.$setAttr( "data-spin", "on" );
 	}
 
-	if ( GSUdomGetAttr( playBtn, "data-icon" ) === "pause" ) {
+	if ( playBtn.$getAttr( "data-icon" ) === "pause" ) {
 		stop();
 	} else {
 		if ( bufKeys ) {
-			GSUdomSetAttr( playBtn, "data-icon", "pause" );
+			playBtn.$setAttr( "data-icon", "pause" );
 		}
 		( bufKeys
 			? Promise.resolve()
@@ -124,9 +124,8 @@ playBtn.onclick = () => {
 						...bufs[ 1 ].getChannelData( i ),
 					] ), i );
 				}
-				GSUdomRmClass( document.body, "loading" );
-				GSUdomRmAttr( playBtn, "data-spin" );
-				GSUdomSetAttr( playBtn, "data-icon", "pause" );
+				$body.$rmClass( "loading" );
+				playBtn.$rmAttr( "data-spin" ).$setAttr( "data-icon", "pause" );
 			} )
 		).then( () => {
 			const scale = scales[ majorMinor ];
@@ -137,40 +136,41 @@ playBtn.onclick = () => {
 			midi.forEach( ( m, i ) => {
 				startKey( m, i * .5 );
 				timeoutIdKeys.push( GSUsetTimeout( () => {
-					GSUdomSetAttr( scalesGraph, "data-key", m % 12 );
+					scalesGraph.$setAttr( "data-key", m % 12 );
 				}, i * .5 ) );
 			} );
 			timeoutIdStop = GSUsetTimeout( () => stop( false ), 8 * .5 + 1 );
 		} );
 	}
-};
+} );
 
 function stop( bufStop ) {
-	if ( GSUdomGetAttr( playBtn, "data-icon" ) === "pause" ) {
+	if ( playBtn.$getAttr( "data-icon" ) === "pause" ) {
 		GSUclearTimeout( timeoutIdStop );
-		GSUdomRmAttr( scalesGraph, "data-key" );
+		scalesGraph.$rmAttr( "data-key" );
 		timeoutIdKeys.forEach( t => GSUclearTimeout( t ) );
 		timeoutIdKeys.length = 0;
 		if ( bufStop !== false ) {
 			absnMap.forEach( absn => absn[ 0 ].stop() );
 		}
 		absnMap.clear();
-		GSUdomSetAttr( playBtn, "data-icon", "play" );
+		playBtn.$setAttr( "data-icon", "play" );
 	}
 }
 
 function activeKeys() {
 	const arr = scales[ majorMinor ];
 
-	keys.forEach( ( el, i ) => {
-		GSUdomTogClass( el, "key-selected", i === gamme );
-		GSUdomTogClass( el, "key-active", !!arr[ ( 12 + i - gamme ) % 12 ] );
+	keys.$each( ( el, i ) => {
+		$( el )
+			.$togClass( "key-selected", i === gamme )
+			.$togClass( "key-active", !!arr[ ( 12 + i - gamme ) % 12 ] );
 	} );
 }
 function updateKeysName() {
 	const arr = notations[ diezeBemol ][ notation ];
 
-	keys.forEach( ( el, i ) => {
+	keys.$each( ( el, i ) => {
 		el.firstChild.textContent = arr[ i ];
 	} );
 }
@@ -228,9 +228,9 @@ function startKey( midi, when ) {
 
 	absn.buffer = bufKeys;
 	lowp.type = "lowpass";
-	lowp.Q.setValueAtTime( 0, ctx.currentTime );
-	lowp.frequency.setValueAtTime( filt, ctx.currentTime );
-	gain.gain.setValueAtTime( vel, ctx.currentTime );
+	GSUaudioParamSet( lowp.Q, 0 );
+	GSUaudioParamSet( lowp.frequency, filt );
+	GSUaudioParamSet( gain.gain, vel );
 	if ( change ) {
 		absn.playbackRate.value = 1 * ( 2 ** ( change / 12 ) );
 	}
