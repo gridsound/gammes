@@ -4,7 +4,7 @@ let notation = localStorage.getItem( "gammes-notation" ) || "doremi";
 let majorMinor = localStorage.getItem( "gammes-majorMinor" ) || "major";
 let diezeBemol = localStorage.getItem( "gammes-diezeBemol" ) || "♯";
 
-$body.$prepend( ...GSUgetTemplate( "main", { notation, majorMinor, diezeBemol } ) );
+$body.$prepend( ...$.$getTemplate( "main", { notation, majorMinor, diezeBemol } ) );
 
 const form = $( "#form" );
 const playBtn = $( "#playBtn" );

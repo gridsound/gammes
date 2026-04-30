@@ -25,7 +25,6 @@
 	],
 	"jsDep": [
 		"gs-utils/gs-utils.js",
-		"gs-utils/gs-utils-dom.js",
 		"gs-utils/gs-utils-math.js",
 		"gs-utils/gs-utils-func.js",
 		"gs-utils/gs-utils-audio.js",
